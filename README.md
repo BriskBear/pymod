@@ -3,5 +3,5 @@ _Modular python methods_
 
 ---  
 
- - [reply](doc/epoch.md)  
+ - [epoch](doc/epoch.md)  
  - [reply](doc/reply.md)  
