@@ -21,6 +21,7 @@ else:
 EC = {
     'is_error': lambda msg: True if str(msg.__class__.__mro__[-2]).split("'")[1] == 'BaseException' else False,
     'get': lambda err: str(err.__class__).split("'")[1],
+    'AttributeError': lambda err: err.args[0],
     'FileNotFoundError': lambda err: f"{err.args[1]}: {err.filename}",
     'KeyError': lambda err: f"\'{err.args[0]}\' is not defined",
     'NameError': lambda err: err.args[0].replace('name ', ''),
@@ -50,4 +51,5 @@ def get_error(err):  # Get a descriptive error-message
     try:
         return klass + ': ' + EC[klass](err)
     except KeyError as k:
-        reply(EC['KeyError'](k), 'e', 'reply-errors.log')
+        reply(EC['get'](k) + ': ' + EC['KeyError'](k), 'e', 'reply-errors.log')
+        raise KeyError(f'ErrorType {klass} is not defined in \'reply\'')
