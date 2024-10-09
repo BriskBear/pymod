@@ -8,6 +8,7 @@ if name == 'nt':
         'warn': '[38;5;208m',
         'none': '[0m'
     }
+
 elif name == 'posix':
     COL = {
         'err': '\u001b[48;5;1m\u001b[38;5;255m',
@@ -15,6 +16,7 @@ elif name == 'posix':
         'warn': '\u001b[38;5;208m',
         'none': '\u001b[0m'
     }
+
 else:
     raise ValueError(f'{name} not yet supported.')
 
@@ -31,16 +33,21 @@ EC = {
 # Write message to screen and log, with message-level-colors on screen
 def reply(message, type='info', leaf='reply.log'):
     out_message = str(message).rstrip()
+
     with open(leaf, "a") as log_file:
         if type in ['error', 'err', 'e']:
             if EC['is_error'](message):
                 print('%sERROR: %s %s' % (COL['err'], get_error(message), COL['none']))
+
             else:
                 print('%sERROR: %s %s' % (COL['err'], out_message, COL['none']))
+
             log_file.write(f'ERROR: {message}\n')
+
         elif type in ['warning', 'warn', 'w']:
             print('%sWARNING: %s%s' % (COL['warn'], out_message, COL['none']))
             log_file.write(f'WARNING: {message}\n')
+
         else:
             print('%s%s%s' % (COL['info'], out_message, COL['none']))
             log_file.write(f'INFO: {out_message}\n')
@@ -50,6 +57,7 @@ def get_error(err):  # Get a descriptive error-message
 
     try:
         return klass + ': ' + EC[klass](err)
+
     except KeyError as k:
         reply(EC['get'](k) + ': ' + EC['KeyError'](k), 'e', 'reply-errors.log')
         raise KeyError(f'ErrorType {klass} is not defined in \'reply\'')
